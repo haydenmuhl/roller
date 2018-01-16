@@ -12,8 +12,9 @@ class Parser:
       self.tokens.append(self.lexer.token())
 
   def accept(self, *types):
+    types = list(types)
     self.ensure(len(types))
-    return list(types) == [x.type for x in self.tokens]
+    return types == [x.type for x in self.tokens[:len(types)]]
 
   def chomp(self):
     if len(self.tokens) > 0:
@@ -22,6 +23,17 @@ class Parser:
     else:
       token = self.lexer.advance()
     return token
+
+  def parse(self):
+    expr = Expression()
+    while self.accept('OP'):
+      expr.append(self.modifier())
+    return expr
+
+  def modifier(self):
+    op = self.op()
+    term = self.term()
+    return Modifier(op, term)
 
   def op(self):
     return Op(self.chomp().value)
@@ -69,10 +81,22 @@ class RandomInt:
     return self.value
 
 class Op:
-  def __init__(self, op):
-    if op == '+':
+  def __init__(self, op_str):
+    if op_str == '+':
       self.multiplier = 1
-    elif op == '-':
+    elif op_str == '-':
       self.multiplier = -1
     else:
       raise Exception
+
+class Modifier:
+  def __init__(self, op, term):
+    self.op = op
+    self.term = term
+
+class Expression:
+  def __init__(self):
+    self.modifiers = []
+
+  def append(self, modifier):
+    self.modifiers.append(modifier)

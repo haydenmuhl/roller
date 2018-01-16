@@ -60,6 +60,11 @@ class TestParserAccept(unittest.TestCase):
     parser = make_parser('1d4')
     self.assertFalse(parser.accept('NUM', 'STR', 'NUM', 'STR'))
 
+  def test_foo(self):
+    parser = make_parser('1+2')
+    self.assertFalse(parser.accept('NUM', 'STR'))
+    self.assertTrue(parser.accept('NUM'))
+
 class TestParserChomp(unittest.TestCase):
   def test_basic_case(self):
     parser = make_parser('4d8+10')
@@ -125,3 +130,40 @@ class TestOp(unittest.TestCase):
     op = parser.op()
     self.assertEqual(op.__class__, roller.parse.Op)
     self.assertEqual(op.multiplier, -1)
+
+class TestModifier(unittest.TestCase):
+  def test_plus_int(self):
+    parser = make_parser('+5')
+    mod = parser.modifier()
+    self.assertEqual(mod.__class__, roller.parse.Modifier)
+    self.assertEqual(mod.op.multiplier, 1)
+    self.assertEqual(mod.term.__class__, roller.parse.Int)
+
+  def test_minus_random_int(self):
+    parser = make_parser('-4d3')
+    mod = parser.modifier()
+    self.assertEqual(mod.__class__, roller.parse.Modifier)
+    self.assertEqual(mod.op.multiplier, -1)
+    self.assertEqual(mod.term.__class__, roller.parse.RandomInt)
+
+  def test_get_first_modifier(self):
+    parser = make_parser('+2+1d8-1')
+    mod = parser.modifier()
+
+class TestExpression(unittest.TestCase):
+  def test_one_full_int_term(self):
+    parser = make_parser('+5')
+    expr = parser.parse()
+    self.assertEqual(expr.__class__, roller.parse.Expression)
+    self.assertEqual(len(expr.modifiers), 1)
+
+  def test_one_full_random_term(self):
+    parser = make_parser('+3d6')
+    expr = parser.parse()
+    self.assertEqual(expr.__class__, roller.parse.Expression)
+    self.assertEqual(len(expr.modifiers), 1)
+
+  def test_multiple_full_terms(self):
+    parser = make_parser('+2+1d8-1')
+    expr = parser.parse()
+    self.assertEqual(len(expr.modifiers), 3)
