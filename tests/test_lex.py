@@ -12,15 +12,15 @@ class TestLex(unittest.TestCase):
 
   def test_plus(self):
     lexer = roller.lex.Lexer('+')
-    self.assertEqual(lexer.advance(), roller.lex.Token('PLUS', '+'))
+    self.assertEqual(lexer.advance(), roller.lex.Token('OP', '+'))
 
   def test_minus(self):
     lexer = roller.lex.Lexer('-')
-    self.assertEqual(lexer.advance(), roller.lex.Token('MINUS', '-'))
+    self.assertEqual(lexer.advance(), roller.lex.Token('OP', '-'))
 
   def test_read_start(self):
     lexer = roller.lex.Lexer('-123')
-    self.assertEqual(lexer.advance(), roller.lex.Token('MINUS', '-'))
+    self.assertEqual(lexer.advance(), roller.lex.Token('OP', '-'))
 
   def test_multiple_tokens(self):
     lexer = roller.lex.Lexer('123abc')
@@ -30,7 +30,7 @@ class TestLex(unittest.TestCase):
   def test_end_of_input(self):
     lexer = roller.lex.Lexer('5+6')
     self.assertEqual(lexer.advance(), roller.lex.Token('NUM', '5'))
-    self.assertEqual(lexer.advance(), roller.lex.Token('PLUS', '+'))
+    self.assertEqual(lexer.advance(), roller.lex.Token('OP', '+'))
     self.assertEqual(lexer.advance(), roller.lex.Token('NUM', '6'))
     self.assertEqual(lexer.advance(), roller.lex.Token('EOI', None))
 
@@ -48,8 +48,8 @@ class TestLex(unittest.TestCase):
     lexer = roller.lex.Lexer('a+b')
     self.assertEqual(lexer.advance(), roller.lex.Token('STR', 'a'))
     self.assertEqual(lexer.token(), roller.lex.Token('STR', 'a'))
-    self.assertEqual(lexer.advance(), roller.lex.Token('PLUS', '+'))
-    self.assertEqual(lexer.token(), roller.lex.Token('PLUS', '+'))
+    self.assertEqual(lexer.advance(), roller.lex.Token('OP', '+'))
+    self.assertEqual(lexer.token(), roller.lex.Token('OP', '+'))
 
   def test_token_end_of_input(self):
     lexer = roller.lex.Lexer('a1')

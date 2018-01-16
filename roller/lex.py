@@ -4,8 +4,7 @@ class Lexer:
   regexes = [
     ('NUM', re.compile("\d+")),
     ('STR', re.compile("[a-z]+")),
-    ('MINUS', re.compile("-")),
-    ('PLUS', re.compile("\+"))
+    ('OP', re.compile("[-+]"))
   ]
 
   def __init__(self, input):
