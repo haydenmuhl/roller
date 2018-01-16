@@ -23,6 +23,9 @@ class Parser:
       token = self.lexer.advance()
     return token
 
+  def op(self):
+    return Op(self.chomp().value)
+
   def term(self):
     if self.accept('NUM', 'STR'):
       return self.random_int()
@@ -65,6 +68,11 @@ class RandomInt:
         self.value += random.randint(1, self.magnitude)
     return self.value
 
-class Plus:
-  def op(self, left, right):
-    return left.eval() + right.eval()
+class Op:
+  def __init__(self, op):
+    if op == '+':
+      self.multiplier = 1
+    elif op == '-':
+      self.multiplier = -1
+    else:
+      raise Exception

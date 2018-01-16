@@ -1,11 +1,6 @@
 import unittest
 import roller.parse
-import roller.lex
 import random
-
-def make_parser(input):
-  lexer = roller.lex.Lexer(input)
-  return roller.parse.Parser(lexer)
 
 class TestInt(unittest.TestCase):
   def test_eval(self):
@@ -27,18 +22,15 @@ class TestRandomInt(unittest.TestCase):
     expr = roller.parse.RandomInt('20', '20')
     self.assertEqual(expr.eval(), expr.eval())
 
-class TestPlus(unittest.TestCase):
-  def test_add_ints(self):
-    plus = roller.parse.Plus()
-    left = roller.parse.Int('5')
-    right = roller.parse.Int('6')
-    self.assertEqual(plus.op(left, right), 11)
+class TestOp(unittest.TestCase):
+  def test_plus(self):
+    op = roller.parse.Op('+')
+    self.assertEqual(op.multiplier, 1)
 
-  def test_add_int_and_random(self):
-    plus = roller.parse.Plus()
-    left = roller.parse.RandomInt('1', '6')
-    right = roller.parse.Int('3')
+  def test_minus(self):
+    op = roller.parse.Op('-')
+    self.assertEqual(op.multiplier, -1)
 
-    left_val = left.eval()
-
-    self.assertEqual(plus.op(left, right), 3 + left_val)
+  def test_invalid_op(self):
+    with self.assertRaises(Exception):
+      roller.parse.Op('%')

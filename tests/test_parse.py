@@ -76,7 +76,7 @@ class TestParserChomp(unittest.TestCase):
     self.assertEqual(parser.tokens[0], roller.lex.Token('STR', 'd'))
     self.assertEqual(token, roller.lex.Token('NUM', '4'))
 
-class TestExpressions(unittest.TestCase):
+class TestTerms(unittest.TestCase):
   def test_int(self):
     parser = make_parser('42')
     integer = parser.int()
@@ -113,3 +113,15 @@ class TestExpressions(unittest.TestCase):
     with self.assertRaises(Exception):
       parser.term()
 
+class TestOp(unittest.TestCase):
+  def test_plus(self):
+    parser = make_parser('+')
+    op = parser.op()
+    self.assertEqual(op.__class__, roller.parse.Op)
+    self.assertEqual(op.multiplier, 1)
+
+  def test_minus(self):
+    parser = make_parser('-')
+    op = parser.op()
+    self.assertEqual(op.__class__, roller.parse.Op)
+    self.assertEqual(op.multiplier, -1)
