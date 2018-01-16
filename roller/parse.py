@@ -23,13 +23,23 @@ class Parser:
       token = self.lexer.advance()
     return token
 
+  def term(self):
+    if self.accept('NUM', 'STR'):
+      return self.random_int()
+    elif self.accept('NUM'):
+      return self.int()
+    else:
+      raise Exception
+
   def int(self):
     int_str = self.chomp().value
     return Int(int_str)
 
   def random_int(self):
     num = self.chomp()
-    self.chomp()
+    d = self.chomp()
+    if d.value != 'd':
+      raise Exception
     mag = self.chomp()
     return RandomInt(num.value, mag.value)
 

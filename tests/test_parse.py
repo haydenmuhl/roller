@@ -76,7 +76,7 @@ class TestParserChomp(unittest.TestCase):
     self.assertEqual(parser.tokens[0], roller.lex.Token('STR', 'd'))
     self.assertEqual(token, roller.lex.Token('NUM', '4'))
 
-class TestMisc(unittest.TestCase):
+class TestExpressions(unittest.TestCase):
   def test_int(self):
     parser = make_parser('42')
     integer = parser.int()
@@ -89,4 +89,27 @@ class TestMisc(unittest.TestCase):
     self.assertEqual(random_integer.__class__, roller.parse.RandomInt)
     self.assertEqual(random_integer.num_dice, 8)
     self.assertEqual(random_integer.magnitude, 4)
+
+  def test_invalid_random_int(self):
+    parser = make_parser('8x4')
+    with self.assertRaises(Exception):
+      parser.random_int()
+
+  def test_term_int(self):
+    parser = make_parser('22')
+    term = parser.term()
+    self.assertEqual(term.__class__, roller.parse.Int)
+    self.assertEqual(term.value, 22)
+
+  def test_term_random(self):
+    parser = make_parser('3d4')
+    term = parser.term()
+    self.assertEqual(term.__class__, roller.parse.RandomInt)
+    self.assertEqual(term.num_dice, 3)
+    self.assertEqual(term.magnitude, 4)
+
+  def test_invalid_term(self):
+    parser = make_parser('foo')
+    with self.assertRaises(Exception):
+      parser.term()
 
