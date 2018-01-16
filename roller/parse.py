@@ -26,6 +26,12 @@ class Parser:
 
   def parse(self):
     expr = Expression()
+    if self.accept('OP'):
+      op = self.op()
+    else:
+      op = Op('+')
+    term = self.term()
+    expr.append(Modifier(op, term))
     while self.accept('OP'):
       expr.append(self.modifier())
     return expr

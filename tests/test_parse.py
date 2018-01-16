@@ -167,3 +167,16 @@ class TestExpression(unittest.TestCase):
     parser = make_parser('+2+1d8-1')
     expr = parser.parse()
     self.assertEqual(len(expr.modifiers), 3)
+
+  def test_optional_first_operator(self):
+    parser = make_parser('2d10-1')
+    expr = parser.parse()
+    self.assertEqual(len(expr.modifiers), 2)
+
+    modifier = expr.modifiers[0]
+    self.assertEqual(modifier.op.multiplier, 1)
+    self.assertEqual(modifier.term.__class__, roller.parse.RandomInt)
+
+    modifier = expr.modifiers[1]
+    self.assertEqual(modifier.op.multiplier, -1)
+    self.assertEqual(modifier.term.__class__, roller.parse.Int)
