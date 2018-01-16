@@ -100,9 +100,18 @@ class Modifier:
     self.op = op
     self.term = term
 
+  def eval(self):
+    return self.op.multiplier * self.term.eval()
+
 class Expression:
   def __init__(self):
     self.modifiers = []
 
   def append(self, modifier):
     self.modifiers.append(modifier)
+
+  def eval(self):
+    sum = 0
+    for m in self.modifiers:
+      sum += m.eval()
+    return sum
