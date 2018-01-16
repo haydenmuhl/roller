@@ -1,10 +1,9 @@
 import unittest
-import roller.lex
 import roller.roller
 import random
 
 def make_parser(input):
-  lexer = roller.lex.Lexer(input)
+  lexer = roller.roller.Lexer(input)
   return roller.roller.Parser(lexer)
 
 class TestParserEnsure(unittest.TestCase):
@@ -13,14 +12,14 @@ class TestParserEnsure(unittest.TestCase):
     parser = make_parser('5d6+3')
     parser.ensure(1)
     self.assertEqual(len(parser.tokens), 1)
-    self.assertEqual(parser.tokens[0], roller.lex.Token('NUM', '5'))
+    self.assertEqual(parser.tokens[0], roller.roller.Token('NUM', '5'))
 
   def test_ensure_two(self):
     parser = make_parser('5d6+3')
     parser.ensure(2)
     self.assertEqual(len(parser.tokens), 2)
-    self.assertEqual(parser.tokens[0], roller.lex.Token('NUM', '5'))
-    self.assertEqual(parser.tokens[1], roller.lex.Token('STR', 'd'))
+    self.assertEqual(parser.tokens[0], roller.roller.Token('NUM', '5'))
+    self.assertEqual(parser.tokens[1], roller.roller.Token('STR', 'd'))
 
   def test_ensure_more(self):
     parser = make_parser('5d6+3')
@@ -78,8 +77,8 @@ class TestParserChomp(unittest.TestCase):
     parser.ensure(3)
     token = parser.chomp()
     self.assertEqual(len(parser.tokens), 2)
-    self.assertEqual(parser.tokens[0], roller.lex.Token('STR', 'd'))
-    self.assertEqual(token, roller.lex.Token('NUM', '4'))
+    self.assertEqual(parser.tokens[0], roller.roller.Token('STR', 'd'))
+    self.assertEqual(token, roller.roller.Token('NUM', '4'))
 
 class TestTerms(unittest.TestCase):
   def test_int(self):
